@@ -236,7 +236,7 @@ def key_down(event):
                 grid_cells[2][2].configure(text=score, bg=BACKGROUND_COLOR_CELL_EMPTY)
 
 
-# function for step of back
+
 def step_back():
     global matrix
     matrix = save
@@ -244,6 +244,7 @@ def step_back():
     print('loaded')
 
 def main():
+    Timer(30.0, hello).start()
     init_grid()
     init_matrix()
     update_grid_cells()
