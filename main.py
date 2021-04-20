@@ -1,5 +1,6 @@
 import random
 from tkinter import *
+import datetime, time
 
 SIZE = 400
 GRID_LEN = 4
@@ -36,6 +37,9 @@ grid_cells = []
 matrix = []
 
 score = 0
+
+can_back = True
+state = 'lose'
 
 def init_grid():
     background = Frame(bg=BACKGROUND_COLOR_GAME, width=SIZE, height=SIZE)
@@ -229,22 +233,33 @@ def key_down(event):
                 grid_cells[1][2].configure(text="Win!", bg=BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[2][1].configure(text="Score:", bg=BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[2][2].configure(text=score, bg=BACKGROUND_COLOR_CELL_EMPTY)
+                start_timer()
             if game_state() == 'lose':
                 grid_cells[1][1].configure(text="You", bg=BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[1][2].configure(text="Lose!", bg = BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[2][1].configure(text="Score:", bg=BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[2][2].configure(text=score, bg=BACKGROUND_COLOR_CELL_EMPTY)
+                start_timer()
 
 
 
 def step_back():
-    global matrix
-    matrix = save
-    update_grid_cells()
-    print('loaded')
+    if can_back:
+        global matrix
+        matrix = save
+        update_grid_cells()
+
+def start_timer():
+    global can_back
+    timing = time.time()
+    while True:
+        if time.time() - timing > 5.0:
+            timing = time.time()
+            can_back = False
+            break
+
 
 def main():
-    Timer(30.0, hello).start()
     init_grid()
     init_matrix()
     update_grid_cells()
@@ -256,6 +271,7 @@ def main():
     mainframe.master.bind("<Key>", key_down)
     mainframe.commands = {KEY_UP: up, KEY_DOWN: down, KEY_LEFT: left, KEY_RIGHT: right, KEY_BACK: step_back}
     mainloop()
+
 
 
 if __name__ == '__main__':
