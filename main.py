@@ -221,6 +221,7 @@ def game_state():
 
 
 def key_down(event):
+    global can_back
     key = repr(event.char)
     if key in mainframe.commands:
         done = mainframe.commands[repr(event.char)]()
@@ -233,15 +234,15 @@ def key_down(event):
                 grid_cells[1][2].configure(text="Win!", bg=BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[2][1].configure(text="Score:", bg=BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[2][2].configure(text=score, bg=BACKGROUND_COLOR_CELL_EMPTY)
-                start_timer()
+                can_back = False
+
             if game_state() == 'lose':
+                # вывод сообщения
                 grid_cells[1][1].configure(text="You", bg=BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[1][2].configure(text="Lose!", bg = BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[2][1].configure(text="Score:", bg=BACKGROUND_COLOR_CELL_EMPTY)
                 grid_cells[2][2].configure(text=score, bg=BACKGROUND_COLOR_CELL_EMPTY)
-                start_timer()
-
-
+                can_back = False
 
 def step_back():
     if can_back:
@@ -249,15 +250,13 @@ def step_back():
         matrix = save
         update_grid_cells()
 
-def start_timer():
-    global can_back
-    timing = time.time()
-    while True:
-        if time.time() - timing > 5.0:
-            timing = time.time()
-            can_back = False
-            break
-
+# def start_timer():
+#     global can_back
+#     timing = time.time()
+#     while True:
+#         if time.time() - timing > 1.0:
+#             timing = time.time()
+#             break
 
 def main():
     init_grid()
@@ -271,7 +270,6 @@ def main():
     mainframe.master.bind("<Key>", key_down)
     mainframe.commands = {KEY_UP: up, KEY_DOWN: down, KEY_LEFT: left, KEY_RIGHT: right, KEY_BACK: step_back}
     mainloop()
-
 
 
 if __name__ == '__main__':
