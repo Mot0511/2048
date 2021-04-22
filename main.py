@@ -36,12 +36,14 @@ mainframe = Frame()
 grid_cells = []
 matrix = []
 
+label = Label()
+
 score = 0
 
 can_back = True
 state = 'lose'
-
 def init_grid():
+    global score
     background = Frame(bg=BACKGROUND_COLOR_GAME, width=SIZE, height=SIZE)
     background.grid()
 
@@ -53,6 +55,10 @@ def init_grid():
             t = Label(master=cell, text="", bg=BACKGROUND_COLOR_CELL_EMPTY,justify=CENTER, font=FONT, width=5,height=2)
             t.grid()
             grid_row.append(t)
+
+        global label
+        label = Label(background, text=score, bg=BACKGROUND_COLOR_GAME, font=('Arial Bold', 50))
+        label.grid(column=1, row=4)
 
         grid_cells.append(grid_row)
 
@@ -125,6 +131,7 @@ def merge(mat):
                 mat[i][j] *= 2
                 global score
                 score += mat[i][j]
+                label.configure(text=score)
                 mat[i][j+1] = 0
                 done = True
 
@@ -226,7 +233,11 @@ def key_down(event):
     if key in mainframe.commands:
         done = mainframe.commands[repr(event.char)]()
         if done:
-            add_two()
+            r_num = random.randint(0, 5)
+            if r_num == 2:
+                add_four()
+            else:
+                add_two()
             update_grid_cells()
             if game_state() == 'win':
                 global score
